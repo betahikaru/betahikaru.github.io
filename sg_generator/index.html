@@ -39,6 +39,7 @@
         var width = 1200;
         var height = 675;
         var fLocalStorageAvailable = false;
+        var data_background_notLS = null;
         function changeFileHandler(saveKey) {
             return function (evt) {
                 var file = evt.target.files[0];
@@ -52,13 +53,17 @@
                 reader.addEventListener("load", (function(aFileObj, key) {
                     return function(e) {
                         var data = e.target.result;
-                        try {
-                            localStorage.setItem("data_" + key, data);
-                        } catch (e) {
-                            console.log(e);
-                            alert("画像読み込みに失敗しました。もう少し小さいサイズの画像を指定してください。");
+                        if (fLocalStorageAvailable) {
+                            try {
+                                localStorage.setItem("data_" + key, data);
+                            } catch (e) {
+                                console.log(e);
+                                alert("画像読み込みに失敗しました。もう少し小さいサイズの画像を指定してください。");
+                            }
+                            localStorage.setItem("meta_" + key, aFileObj);
+                        } else {
+                            data_background_notLS = data;
                         }
-                        localStorage.setItem("meta_" + key, aFileObj);
                     };
                 })(fileObj, saveKey), false);
                 reader.readAsDataURL(file);
@@ -94,7 +99,11 @@
 
             // http://www.html5.jp/canvas/ref/method/drawImage.html
             try {
-                image1.src = localStorage.getItem("data_" + "background");
+                if (fLocalStorageAvailable) {
+                    image1.src = localStorage.getItem("data_" + "background");
+                } else {
+                    image1.src = data_background_notLS;
+                }
                 ctx.globalAlpha = 1.0;
                 ctx.drawImage(image1, 0, 0);
             } catch (e) {
@@ -105,11 +114,10 @@
             ctx.globalCompositeOperation = oprtns["destination-atop"];
 
             try {
-            // image2.src = localStorage.getItem("data_" + "file2");
-            image2.src = data_shingodzilla1
-            ctx.globalAlpha = 1.0;
-            ctx.scale(scale, scale);
-            ctx.drawImage(image2, 0, 0);
+                image2.src = data_shingodzilla1
+                ctx.globalAlpha = 1.0;
+                ctx.scale(scale, scale);
+                ctx.drawImage(image2, 0, 0);
             } catch(e) {
                 console.log(e);
                 alert("テロップ画像の描画に失敗しました。@betahikaruまでご連絡ください。");
@@ -123,13 +131,13 @@
             }
             if (localStorage && localStorage.getItem && localStorage.setItem) {
                 fLocalStorageAvailable = true;
-            } else {
-                alert('The localStorage APIs are not fully supported in this browser.');                
             }
             var fileElm1 = document.querySelector("#image-background");
             var fileElm2 = document.querySelector("#image-file2");
             fileElm1.addEventListener("change", changeFileHandler("background"), false);
             fileElm2.addEventListener("change", changeFileHandler("file2"), false);
+
+            shingodzilla1(800,450, 0.67);
         })();
         
     </script>
