@@ -82,17 +82,17 @@
             // http://doc.qt.io/qt-4.8/qtwebkit-guide-canvas.html
             // http://www.html5.jp/canvas/ref/property/globalCompositeOperation.html
             var oprtns = new Array(
-                "source-atop",
-                "source-in",
-                "source-out",
-                "source-over",
-                "destination-atop",
-                "destination-in",
-                "destination-out",
-                "destination-over",
-                "lighter",
-                "copy",
-                "xor"
+                /* 0 */ "source-atop",
+                /* 1 */ "source-in",
+                /* 2 */ "source-out",
+                /* 3 */ "source-over",
+                /* 4 */ "destination-atop",
+                /* 5 */ "destination-in",
+                /* 6 */ "destination-out",
+                /* 7 */ "destination-over",
+                /* 8 */ "lighter",
+                /* 9 */ "copy",
+                /*10 */ "xor"
             );
             ctx.fillStyle = "white";
             ctx.clearRect(0, 0, width, height);
@@ -111,7 +111,7 @@
                 alert("背景画像の描画に失敗しました。画像を指定しているか、画像以外のファイルを指定していないか確認してください。PNGかJPEGがオススメです。");
             }
 
-            ctx.globalCompositeOperation = oprtns["destination-atop"];
+            ctx.globalCompositeOperation = oprtns[3];
 
             try {
                 image2.src = data_shingodzilla1
